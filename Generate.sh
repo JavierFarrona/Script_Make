@@ -12,7 +12,7 @@ RUTA_DESTINO="$1"
 # Crea el directorio si no existe
 mkdir -p "$RUTA_DESTINO"
 
-# Contenido del Makefile actualizado
+# Contenido del Makefile
 MAKEFILE_CONTENT="# Makefile generado automáticamente con soporte para archivos objeto en /trash
 
 CXX = g++
@@ -68,7 +68,10 @@ tar:
 	    echo \"Error: Debes especificar un directorio usando 'make tar DIR=<directorio>'\"; \\
 	    exit 1; \\
 	fi
-	tar --exclude=\"\$(DIR).tgz\" -czvf \"\$(DIR).tgz\" \"\$(DIR)\"
+	@BASE_DIR=\$\$(dirname \"\$(DIR)\"); \\
+	ARCHIVE_NAME=\$\$(basename \"\$(DIR)\").tgz; \\
+	echo \"Creating archive \$\$BASE_DIR/\$\$ARCHIVE_NAME\"; \\
+	tar --exclude=\"\$(DIR)/\$\$ARCHIVE_NAME\" -czvf \"\$\$BASE_DIR/\$\$ARCHIVE_NAME\" \"\$(DIR)\"
 
 # Eliminación del archivo comprimido
 tar_clean:
@@ -89,7 +92,7 @@ git:
 	git push
 "
 
-# Guarda el Makefile en la ruta destino
+# Escribe el contenido del Makefile en la ruta de destino
 echo "$MAKEFILE_CONTENT" > "$RUTA_DESTINO/Makefile"
 
 echo "Makefile generado en $RUTA_DESTINO/Makefile"

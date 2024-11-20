@@ -53,8 +53,10 @@ tar:
 	    echo "Error: Debes especificar un directorio usando 'make tar DIR=<directorio>'"; \
 	    exit 1; \
 	fi
-
-	tar --exclude="$(DIR).tgz" -czvf "$(DIR).tgz" "$(DIR)"
+	@BASE_DIR=$$(dirname "$(DIR)"); \
+	ARCHIVE_NAME=$$(basename "$(DIR)").tgz; \
+	echo "Creating archive $$BASE_DIR/$$ARCHIVE_NAME"; \
+	tar --exclude="$(DIR)/$$ARCHIVE_NAME" -czvf "$$BASE_DIR/$$ARCHIVE_NAME" "$(DIR)"
 
 # Eliminación del archivo comprimido
 tar_clean:
@@ -62,7 +64,6 @@ tar_clean:
 	    echo "Error: Debes especificar un directorio usando 'make tar_clean DIR=<directorio>'"; \
 	    exit 1; \
 	fi
-	
 	rm -f "$(DIR).tgz"
 
 # Commit y push a git con un mensaje
@@ -71,7 +72,6 @@ git:
 	    echo "Error: Debes especificar un mensaje de commit usando 'make git m=\"<mensaje>\"'"; \
 	    exit 1; \
 	fi
-
 	git add .
 	git commit -m "$(m)"
 	git push
